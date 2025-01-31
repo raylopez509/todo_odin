@@ -2,6 +2,6 @@ body {
   background-color: blue;
 }
 
-section {
+.task-container > section {
   border: 1px solid black;
 }
