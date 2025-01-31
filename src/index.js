@@ -20,4 +20,27 @@ function enterTaskInformation() {
   return task;
 }
 
-console.log(enterTaskInformation());
+function createTaskDOM(task) {
+  let taskSection = document.createElement("section");
+  let taskContainer = document.querySelector(".task-container");
+  taskSection.appendChild(createDOMElement("p",task.title));
+  taskSection.appendChild(createDOMElement("p",task.description));
+  taskSection.appendChild(createDOMElement("p",task.dueDate));
+  taskSection.appendChild(createDOMElement("p",task.priority));
+  taskContainer.appendChild(taskSection);
+}
+
+function createDOMElement(tag, text) {
+  let element = document.createElement(tag);
+  element.textContent = text;
+  return element;
+}
+
+// createTaskDOM(enterTaskInformation());
+
+const addTaskButton = document.querySelector(".add-task-button");
+addTaskButton.addEventListener("click", () => createTaskDOM(new Task("test1","test2","test3","test4")));
+
+createTaskDOM(new Task("test1","test2","test3","test4"));
+
+
