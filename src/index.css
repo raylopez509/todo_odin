@@ -1,7 +1,12 @@
-body {
+/* body {
   background-color: blue;
-}
+} */
 
 .task-container > section {
   border: 1px solid black;
+}
+
+.expand {
+  display: flex;
+  justify-content: space-between;
 }
