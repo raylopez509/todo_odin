@@ -1,7 +1,5 @@
 import './index.css';
 
-console.log('hi');
-
 class Task {
   constructor(title, description, dueDate, priority) {
     this.title = title;
@@ -26,20 +24,61 @@ class Task {
 function createTaskDOM(task) {
   let taskSection = document.createElement('section');
   let taskContainer = document.querySelector('.task-container');
-  taskSection.appendChild(createDOMElement('p', task.title));
-  taskSection.appendChild(createDOMElement('p', task.description));
-  taskSection.appendChild(createDOMElement('p', task.dueDate));
-  taskSection.appendChild(createDOMElement('p', task.priority));
+  taskSection.className = 'expand';
+  taskSection.value = task.id;
+  taskSection.appendChild(createDOMElement('p', task.title, task.id));
+  // taskSection.appendChild(createDOMElement('p', task.description));
+  taskSection.appendChild(createDOMElement('p', task.dueDate, task.id));
+  // taskSection.appendChild(createDOMElement('p', task.priority));
   taskContainer.appendChild(taskSection);
+  taskSection.addEventListener('click', expandSection);
 }
 
-function createDOMElement(tag, text) {
+function createDOMElement(tag, text, id) {
   let element = document.createElement(tag);
   element.textContent = text;
+  element.value = id;
   return element;
 }
 
+const expandSection = (event) => {
+  console.log("i got clicked");
+  let dom = event.target;
+  let value = dom.value;
+  if(event.target !== event.currentTarget) {
+    dom = event.currentTarget;
+  }
+  while (dom.firstChild) {
+    dom.removeChild(dom.firstChild);
+  }
+  dom.addEventListener('click',shrinkSection)
+  dom.removeEventListener('click',expandSection);
+  dom.appendChild(createDOMElement('p', tasks[value].title, value));
+  dom.appendChild(createDOMElement('p', tasks[value].description, value));
+  dom.appendChild(createDOMElement('p', tasks[value].dueDate, value));
+  dom.appendChild(createDOMElement('p', tasks[value].priority, value));
+  dom.className = '';
+
+};
+
+const shrinkSection = (event) =>{
+  let dom = event.target;
+  let value = dom.value;
+  if(event.target !== event.currentTarget) {
+    dom = event.currentTarget;
+  }
+  while (dom.firstChild) {
+    dom.removeChild(dom.firstChild);
+  }
+  dom.addEventListener('click',expandSection)
+  dom.removeEventListener('click',shrinkSection);
+  dom.appendChild(createDOMElement('p', tasks[value].title, value));
+  dom.appendChild(createDOMElement('p', tasks[value].dueDate, value));
+  dom.className = "expand";
+}
+
 let testTask = new Task('test1', 'test2', 'test3', 'test4');
+let testTask2 = new Task('Open this task', 'Show this when you click on the task','2/28/2025','high');
 
 const addTaskButton = document.querySelector('.add-task-button');
 addTaskButton.addEventListener('click', () => createTaskDOM(testTask));
@@ -53,6 +92,7 @@ function addTask(task) {
 }
 
 addTask(testTask);
+addTask(testTask2);
 
 console.log(tasks);
 
@@ -65,22 +105,3 @@ section.addEventListener('click', (e) => {
   toggleDoms.style.display =
     toggleDoms.style.display === 'none' ? 'block' : 'none';
 });
-
-addTaskButton.addEventListener('click', () => createTaskDOM(testTask));
-
-const expandSection = (event) => {
-  console.log(event);
-  let dom = event.target;
-  while (dom.firstChild) {
-    dom.removeChild(dom.firstChild);
-  }
-  dom.appendChild(createDOMElement('p', tasks[0].title));
-  dom.appendChild(createDOMElement('p', tasks[0].description));
-  dom.appendChild(createDOMElement('p', tasks[0].dueDate));
-  dom.appendChild(createDOMElement('p', tasks[0].priority));
-  dom.className = '';
-};
-
-const expandDom = document.querySelector('.expand');
-
-expandDom.addEventListener('click', expandSection);
