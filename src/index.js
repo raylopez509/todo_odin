@@ -10,26 +10,13 @@ class Task {
   }
 }
 
-// function enterTaskInformation() {
-//   let title = prompt('Enter task title');
-//   let description = prompt('Enter task description');
-//   let dueDate = prompt('When is it due?');
-//   let priority = prompt('what is the priority');
-//   let task = new Task(title, description, dueDate, priority);
-//   return task;
-// }
-
-// createTaskDOM(enterTaskInformation());
-
 function createTaskDOM(task) {
   let taskSection = document.createElement('section');
   let taskContainer = document.querySelector('.task-container');
   taskSection.className = 'expand';
   taskSection.value = task.id;
   taskSection.appendChild(createDOMElement('p', task.title, task.id));
-  // taskSection.appendChild(createDOMElement('p', task.description));
   taskSection.appendChild(createDOMElement('p', task.dueDate, task.id));
-  // taskSection.appendChild(createDOMElement('p', task.priority));
   taskContainer.appendChild(taskSection);
   taskSection.addEventListener('click', expandSection);
 }
@@ -57,6 +44,12 @@ const expandSection = (event) => {
   dom.appendChild(createDOMElement('p', tasks[value].description, value));
   dom.appendChild(createDOMElement('p', tasks[value].dueDate, value));
   dom.appendChild(createDOMElement('p', tasks[value].priority, value));
+  const editButton = document.createElement('button');
+  editButton.textContent = "Edit";
+  dom.appendChild(editButton);
+  const deleteButton = document.createElement('button');
+  deleteButton.textContent = "Delete";
+  dom.appendChild(deleteButton);
   dom.className = '';
 
 };
@@ -77,31 +70,26 @@ const shrinkSection = (event) =>{
   dom.className = "expand";
 }
 
-let testTask = new Task('test1', 'test2', 'test3', 'test4');
-let testTask2 = new Task('Open this task', 'Show this when you click on the task','2/28/2025','high');
-
 const addTaskButton = document.querySelector('.add-task-button');
-addTaskButton.addEventListener('click', () => createTaskDOM(testTask));
+addTaskButton.addEventListener('click', addTask);
 
-let tasks = [];
-
-function addTask(task) {
+function addTask() {
+  let title = document.querySelector('#title').value;
+  let description = document.querySelector('#description').value;
+  let dueDate = document.querySelector('#dueDate').value;
+  let priority = document.querySelector('#priority').value;
+  let task = new Task(title, description, dueDate, priority);
   task.id = tasks.length;
   tasks.push(task);
-  createTaskDOM(task);
+  createTaskDOM(task); 
+
+  document.querySelector('#title').value = "";
+  document.querySelector('#description').value = "";
+  document.querySelector('#dueDate').value = "";
 }
 
-addTask(testTask);
-addTask(testTask2);
-
-console.log(tasks);
-
-const section = document.querySelector('.test');
-section.addEventListener('click', (e) => {
-  console.log(`.${e.currentTarget.className} > .hide`);
-  let toggleDoms = document.querySelector(
-    `.${e.currentTarget.className} > p.hide`
-  );
-  toggleDoms.style.display =
-    toggleDoms.style.display === 'none' ? 'block' : 'none';
-});
+let tasks = [];
+let testTask = new Task('Create a todo app', 'make a delete button', '01-01-2025', 'high');
+testTask.id = tasks.length;
+tasks.push(testTask);
+createTaskDOM(testTask); 
