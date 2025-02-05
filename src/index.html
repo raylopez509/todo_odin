@@ -8,19 +8,22 @@
   <body>
     <h1>Project</h1>
     <button class="add-task-button">Add Task</button>
+    <form>
+      <label for='title'>Title: </label>
+      <input id='title' required>
+      <label for='description'>Description: </label>
+      <textarea id='description' rows='5' cols='25' required></textarea> 
+      <label for='dueDate'>Due Date: </label>
+      <input type='date' id='dueDate' required>
+      <label for='priority'>Priority</label>
+      <select id='priority' required>
+        <option selected disabled hidden>Select</option>
+        <option value='high'>High</option>
+        <option value='medium'>Medium</option>
+        <option value='low'>Low</option>
+      </select>
+    </form>
     <section class="task-container">
-      <section class="test">
-        <p>Do something</p>
-        <p class="hide">Do this task so that you can do something!</p>
-        <p class="hide">Due: 1/1/2025</p>
-        <p>Priority: High</p>
-      </section>
-      <section>
-        <p>Do something</p>
-        <p>Do this task so that you can do something!</p>
-        <p>Due: 1/1/2025</p>
-        <p>Priority: High</p>
-      </section>
     </section>
   </body>
 </html>
