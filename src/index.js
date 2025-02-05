@@ -19,6 +19,9 @@ function createTaskDOM(task) {
   taskSection.appendChild(createDOMElement('p', task.dueDate, task.id));
   taskContainer.appendChild(taskSection);
   taskSection.addEventListener('click', expandSection);
+  const deleteButton = document.createElement('button');
+  deleteButton.textContent = "Done";
+  taskSection.appendChild(deleteButton);
 }
 
 function createDOMElement(tag, text, id) {
@@ -32,7 +35,10 @@ const expandSection = (event) => {
   console.log("i got clicked");
   let dom = event.target;
   let value = dom.value;
-  if(event.target !== event.currentTarget) {
+  if(event.target.localName == "button") {
+    return;
+  }
+  else if(event.target !== event.currentTarget) {
     dom = event.currentTarget;
   }
   while (dom.firstChild) {
@@ -57,7 +63,10 @@ const expandSection = (event) => {
 const shrinkSection = (event) =>{
   let dom = event.target;
   let value = dom.value;
-  if(event.target !== event.currentTarget) {
+  if(event.target.localName == "button") {
+    return;
+  }
+  else if(event.target !== event.currentTarget) {
     dom = event.currentTarget;
   }
   while (dom.firstChild) {
@@ -67,13 +76,27 @@ const shrinkSection = (event) =>{
   dom.removeEventListener('click',shrinkSection);
   dom.appendChild(createDOMElement('p', tasks[value].title, value));
   dom.appendChild(createDOMElement('p', tasks[value].dueDate, value));
+  const markCompleteButton = document.createElement('button');
+  markCompleteButton.textContent = "Done";
+  dom.appendChild(markCompleteButton);
   dom.className = "expand";
 }
 
-const addTaskButton = document.querySelector('.add-task-button');
-addTaskButton.addEventListener('click', addTask);
+const addTaskDialog = document.querySelector("#add-task-dialog");
 
-function addTask() {
+const addTaskButton = document.querySelector('.add-task-button');
+addTaskButton.addEventListener('click', () => {
+  addTaskDialog.showModal();
+});
+
+const cancelButton = document.querySelector('#cancel');
+cancelButton.addEventListener('click', (event) => {
+  event.preventDefault();
+  addTaskDialog.close();
+});
+
+const addTask = (event) => {
+  event.preventDefault();
   let title = document.querySelector('#title').value;
   let description = document.querySelector('#description').value;
   let dueDate = document.querySelector('#dueDate').value;
@@ -86,7 +109,14 @@ function addTask() {
   document.querySelector('#title').value = "";
   document.querySelector('#description').value = "";
   document.querySelector('#dueDate').value = "";
+
+  addTaskDialog.close();
 }
+
+
+
+const addTaskForm = document.querySelector('#add-task-form');
+addTaskForm.addEventListener('submit', addTask);
 
 let tasks = [];
 let testTask = new Task('Create a todo app', 'make a delete button', '01-01-2025', 'high');
