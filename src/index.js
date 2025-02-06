@@ -10,15 +10,89 @@ class Task {
   }
 }
 
+const tasks = [];
+
+const TaskController = (() => {
+  // class Task {
+  //   constructor(title, description, dueDate, priority) {
+  //     this.title = title;
+  //     this.description = description;
+  //     this.dueDate = dueDate;
+  //     this.priority = priority;
+  //     this.id = undefined;
+  //   }
+  // }
+
+  // const tasks = [];
+  
+  function addTask(task) {
+    task.id = task.length;
+    tasks.add(task);
+  }
+  
+  function deleteTask(task) {
+    let index = task.id;
+    tasks.splice(index, 1);
+  }
+
+  function updateTask(task, index) {
+    tasks[index] = task;
+  }
+
+  return {
+    addTask,
+    deleteTask,
+    updateTask
+  }
+})();
+
+const DOMController = (() => {
+  function createDOMElement(tag, text, id) {
+    const element = document.createElement(tag);
+    element.textContent = text;
+    if(id) {
+      element.value = id;
+    }
+    return element;
+  }
+
+  function createTaskDOM(task) {
+    const taskSection = createTaskSection(task.id);
+    createChildrenDOMsShrink(taskSection, task)
+    const taskContainer = document.querySelector('.task-container');
+    taskContainer.appendChild(taskSection);
+  }
+
+  function createTaskSection(value) {
+    const taskSection = document.createElement('section');
+    taskSection.className = 'expand';
+    taskSection.value = value;
+    taskSection.addEventListener('click', expandSection);
+    return taskSection;
+  }
+
+  function createChildrenDOMsShrink(element, task) {
+    element.appendChild(createDOMElement('p', task.title, task.id));
+    element.appendChild(createDOMElement('p', task.dueDate, task.id));
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = "Done";
+    element.appendChild(deleteButton);  
+  }
+
+  return {
+    createDOMElement
+  }
+})();
+
 function createTaskDOM(task) {
-  let taskSection = document.createElement('section');
-  let taskContainer = document.querySelector('.task-container');
-  taskSection.className = 'expand';
-  taskSection.value = task.id;
+  // let taskSection = document.createElement('section');
+  // let taskContainer = document.querySelector('.task-container');
+  // taskSection.className = 'expand';
+  // taskSection.value = task.id;
   taskSection.appendChild(createDOMElement('p', task.title, task.id));
   taskSection.appendChild(createDOMElement('p', task.dueDate, task.id));
   taskContainer.appendChild(taskSection);
-  taskSection.addEventListener('click', expandSection);
+  // taskSection.addEventListener('click', expandSection);
   const deleteButton = document.createElement('button');
   deleteButton.textContent = "Done";
   taskSection.appendChild(deleteButton);
@@ -32,7 +106,6 @@ function createDOMElement(tag, text, id) {
 }
 
 const expandSection = (event) => {
-  console.log("i got clicked");
   let dom = event.target;
   let value = dom.value;
   if(event.target.localName == "button") {
@@ -113,13 +186,11 @@ const addTask = (event) => {
   addTaskDialog.close();
 }
 
-
-
 const addTaskForm = document.querySelector('#add-task-form');
 addTaskForm.addEventListener('submit', addTask);
 
-let tasks = [];
 let testTask = new Task('Create a todo app', 'make a delete button', '01-01-2025', 'high');
+console.log(tasks);
 testTask.id = tasks.length;
 tasks.push(testTask);
 createTaskDOM(testTask); 
