@@ -96,6 +96,7 @@ const DOMController = (() => {
     element.appendChild(editButton);
     const deleteButton = document.createElement('button');
     deleteButton.textContent = "Delete";
+    deleteButton.addEventListener('click',deleteTask);
     element.appendChild(deleteButton);
   }
 
@@ -137,40 +138,46 @@ const DOMController = (() => {
     dom.className = "expand";
   }
 
-const addTaskDialog = document.querySelector("#add-task-dialog");
+  const addTaskDialog = document.querySelector("#add-task-dialog");
 
-const addTaskButton = document.querySelector('.add-task-button');
-addTaskButton.addEventListener('click', () => {
-  addTaskDialog.showModal();
-});
+  const addTaskButton = document.querySelector('.add-task-button');
+  addTaskButton.addEventListener('click', () => {
+    addTaskDialog.showModal();
+  });
 
-const cancelButton = document.querySelector('#cancel');
-cancelButton.addEventListener('click', (event) => {
-  event.preventDefault();
-  addTaskDialog.close();
-});
+  const cancelButton = document.querySelector('#cancel');
+  cancelButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    addTaskDialog.close();
+  });
 
-const addTask = (event) => {
-  event.preventDefault();
-  let title = document.querySelector('#title').value;
-  let description = document.querySelector('#description').value;
-  let dueDate = document.querySelector('#dueDate').value;
-  let priority = document.querySelector('#priority').value;
-  const task = TaskController.createTask(title, description, dueDate, priority);
-                                                                    
-  createTaskDOM(task); 
+  const addTask = (event) => {
+    event.preventDefault();
+    let title = document.querySelector('#title').value;
+    let description = document.querySelector('#description').value;
+    let dueDate = document.querySelector('#dueDate').value;
+    let priority = document.querySelector('#priority').value;
+    const task = TaskController.createTask(title, description, dueDate, priority);
+                                                                      
+    createTaskDOM(task); 
 
-  document.querySelector('#title').value = "";
-  document.querySelector('#description').value = "";
-  document.querySelector('#dueDate').value = "";
+    document.querySelector('#title').value = "";
+    document.querySelector('#description').value = "";
+    document.querySelector('#dueDate').value = "";
 
-  addTaskDialog.close();
-}
+    addTaskDialog.close();
+  }
 
-const addTaskForm = document.querySelector('#add-task-form');
-addTaskForm.addEventListener('submit', addTask);
+  const addTaskForm = document.querySelector('#add-task-form');
+  addTaskForm.addEventListener('submit', addTask);
 
-let testDOM = TaskController.createTask("Make Edit Button Work","make all of them work", "1-1-2025", "high");
-createTaskDOM(testDOM);
+  const deleteTask = (event) => {
+    let element = event.target.parentNode;
+    TaskController.deleteTask(element.value);
+    element.parentNode.removeChild(element);
+  }
+
+  let testDOM = TaskController.createTask("Make Edit Button Work","make all of them work", "1-1-2025", "high");
+  createTaskDOM(testDOM);
 })();
 
