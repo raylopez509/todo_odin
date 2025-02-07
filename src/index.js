@@ -1,17 +1,5 @@
 import './index.css';
 
-// class Task {
-//   constructor(title, description, dueDate, priority) {
-//     this.title = title;
-//     this.description = description;
-//     this.dueDate = dueDate;
-//     this.priority = priority;
-//     this.id = undefined;
-//   }
-// }
-
-// const tasks = [];
-
 const TaskController = (() => {
   class Task {
     constructor(title, description, dueDate, priority) {
@@ -25,9 +13,11 @@ const TaskController = (() => {
 
   const tasks = [];
     
-  function deleteTask(task) {
-    let index = task.id;
-    tasks.splice(index, 1);
+  function deleteTask(taskId) {
+    tasks.splice(taskId, 1);
+    for(let i = taskId; i < tasks.length; i++) {
+      tasks[i].id = tasks[i].id - 1;
+    }
   }
 
   function updateTask(task, index) {
@@ -49,7 +39,8 @@ const TaskController = (() => {
     deleteTask,
     updateTask,
     getTask,
-    createTask
+    createTask,
+    tasks
   }
 })();
 
@@ -128,7 +119,6 @@ const DOMController = (() => {
       dom = event.currentTarget;
     }
     let task = TaskController.getTask(dom.value);
-    console.log(task);
     while (dom.firstChild) {
       dom.removeChild(dom.firstChild);
     }
@@ -164,7 +154,6 @@ const DOMController = (() => {
     document.querySelector('#title').value = "";
     document.querySelector('#description').value = "";
     document.querySelector('#dueDate').value = "";
-
     addTaskDialog.close();
   }
 
@@ -174,6 +163,11 @@ const DOMController = (() => {
   const deleteTask = (event) => {
     let element = event.target.parentNode;
     TaskController.deleteTask(element.value);
+    let elementTraversal = element.nextElementSibling;
+    while(elementTraversal !== null) {
+      elementTraversal.value--;
+      elementTraversal = elementTraversal.nextElementSibling;
+    }
     element.parentNode.removeChild(element);
   }
 
