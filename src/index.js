@@ -40,7 +40,6 @@ const TaskController = (() => {
     updateTask,
     getTask,
     createTask,
-    tasks
   }
 })();
 
@@ -100,7 +99,6 @@ const DOMController = (() => {
       dom = event.currentTarget;
     }
     let task = TaskController.getTask(dom.value);
-    console.log(task);
     while (dom.firstChild) {
       dom.removeChild(dom.firstChild);
     }
