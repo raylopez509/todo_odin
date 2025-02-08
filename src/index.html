@@ -8,26 +8,25 @@
   <body>
     <h1>Project</h1>
     <button class="add-task-button">Add Task</button>
-    <dialog id='add-task-dialog'>
-      <h1>Add Task</h1>
-      <form id='add-task-form'>
-        <label for='title'>Title: </label>
-        <input id='title' required>
-        <label for='description'>Description: </label>
-        <textarea id='description' rows='5' cols='25'></textarea> 
-        <label for='dueDate'>Due Date: </label>
-        <input type='date' id='dueDate' >
-        <label for='priority'>Priority</label>
-        <select id='priority' required>
-          <option value='high'>High</option>
-          <option value='medium'>Medium</option>
-          <option value='low'>Low</option>
+    <dialog id="add-task-dialog">
+      <h1 id="task-dialog-title">Add Task</h1>
+      <form id="add-task-form">
+        <label for="title">Title: </label>
+        <input id="title" required />
+        <label for="description">Description: </label>
+        <textarea id="description" rows="5" cols="25"></textarea>
+        <label for="dueDate">Due Date: </label>
+        <input type="date" id="dueDate" />
+        <label for="priority">Priority</label>
+        <select id="priority" required>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
         </select>
-        <button id='cancel'>Cancel</button>
-        <button type='submit' id='submit'>Submit</button>
+        <button id="cancel">Cancel</button>
+        <button type="submit" id="submit">Submit</button>
       </form>
     </dialog>
-    <section class="task-container">
-    </section>
+    <section class="task-container"></section>
   </body>
 </html>

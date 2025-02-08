@@ -12,10 +12,10 @@ const TaskController = (() => {
   }
 
   const tasks = [];
-    
+
   function deleteTask(taskId) {
     tasks.splice(taskId, 1);
-    for(let i = taskId; i < tasks.length; i++) {
+    for (let i = taskId; i < tasks.length; i++) {
       tasks[i].id = tasks[i].id - 1;
     }
   }
@@ -31,7 +31,7 @@ const TaskController = (() => {
   function createTask(title, description, dueDate, priority) {
     const task = new Task(title, description, dueDate, priority);
     task.id = tasks.length;
-    tasks.push(task); 
+    tasks.push(task);
     return task;
   }
 
@@ -40,14 +40,14 @@ const TaskController = (() => {
     updateTask,
     getTask,
     createTask,
-  }
+  };
 })();
 
 const DOMController = (() => {
   function createDOMElement(tag, text, id) {
     const element = document.createElement(tag);
     element.textContent = text;
-    if(id) {
+    if (id) {
       element.value = id;
     }
     return element;
@@ -55,7 +55,7 @@ const DOMController = (() => {
 
   function createTaskDOM(task) {
     const taskSection = createTaskSection(task.id);
-    createChildrenDOMsShrink(taskSection, task)
+    createChildrenDOMsShrink(taskSection, task);
     const taskContainer = document.querySelector('.task-container');
     taskContainer.appendChild(taskSection);
   }
@@ -72,8 +72,8 @@ const DOMController = (() => {
     element.appendChild(createDOMElement('p', task.title, task.id));
     element.appendChild(createDOMElement('p', task.dueDate, task.id));
     const doneButton = document.createElement('button');
-    doneButton.textContent = "Done";
-    element.appendChild(doneButton);  
+    doneButton.textContent = 'Done';
+    element.appendChild(doneButton);
   }
 
   function createChildrenDOMsExpand(element, task) {
@@ -82,51 +82,50 @@ const DOMController = (() => {
     element.appendChild(createDOMElement('p', task.dueDate, task.id));
     element.appendChild(createDOMElement('p', task.priority, task.id));
     const editButton = document.createElement('button');
-    editButton.textContent = "Edit";
+    editButton.textContent = 'Edit';
+    editButton.addEventListener('click', editTask);
     element.appendChild(editButton);
     const deleteButton = document.createElement('button');
-    deleteButton.textContent = "Delete";
-    deleteButton.addEventListener('click',deleteTask);
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', deleteTask);
     element.appendChild(deleteButton);
   }
 
   const expandSection = (event) => {
     let dom = event.target;
-    if(event.target.localName == "button") {
+    if (event.target.localName == 'button') {
       return;
-    }
-    else if(event.target !== event.currentTarget) {
+    } else if (event.target !== event.currentTarget) {
       dom = event.currentTarget;
     }
     let task = TaskController.getTask(dom.value);
     while (dom.firstChild) {
       dom.removeChild(dom.firstChild);
     }
-    dom.addEventListener('click',shrinkSection)
-    dom.removeEventListener('click',expandSection);
+    dom.addEventListener('click', shrinkSection);
+    dom.removeEventListener('click', expandSection);
     createChildrenDOMsExpand(dom, task);
     dom.className = '';
   };
 
-  const shrinkSection = (event) =>{
+  const shrinkSection = (event) => {
     let dom = event.target;
-    if(event.target.localName == "button") {
+    if (event.target.localName == 'button') {
       return;
-    }
-    else if(event.target !== event.currentTarget) {
+    } else if (event.target !== event.currentTarget) {
       dom = event.currentTarget;
     }
     let task = TaskController.getTask(dom.value);
     while (dom.firstChild) {
       dom.removeChild(dom.firstChild);
     }
-    dom.addEventListener('click',expandSection)
-    dom.removeEventListener('click',shrinkSection);
+    dom.addEventListener('click', expandSection);
+    dom.removeEventListener('click', shrinkSection);
     createChildrenDOMsShrink(dom, task);
-    dom.className = "expand";
-  }
+    dom.className = 'expand';
+  };
 
-  const addTaskDialog = document.querySelector("#add-task-dialog");
+  const addTaskDialog = document.querySelector('#add-task-dialog');
 
   const addTaskButton = document.querySelector('.add-task-button');
   addTaskButton.addEventListener('click', () => {
@@ -145,15 +144,20 @@ const DOMController = (() => {
     let description = document.querySelector('#description').value;
     let dueDate = document.querySelector('#dueDate').value;
     let priority = document.querySelector('#priority').value;
-    const task = TaskController.createTask(title, description, dueDate, priority);
-                                                                      
-    createTaskDOM(task); 
+    const task = TaskController.createTask(
+      title,
+      description,
+      dueDate,
+      priority
+    );
 
-    document.querySelector('#title').value = "";
-    document.querySelector('#description').value = "";
-    document.querySelector('#dueDate').value = "";
+    createTaskDOM(task);
+
+    document.querySelector('#title').value = '';
+    document.querySelector('#description').value = '';
+    document.querySelector('#dueDate').value = '';
     addTaskDialog.close();
-  }
+  };
 
   const addTaskForm = document.querySelector('#add-task-form');
   addTaskForm.addEventListener('submit', addTask);
@@ -162,14 +166,30 @@ const DOMController = (() => {
     let element = event.target.parentNode;
     TaskController.deleteTask(element.value);
     let elementTraversal = element.nextElementSibling;
-    while(elementTraversal !== null) {
+    while (elementTraversal !== null) {
       elementTraversal.value--;
       elementTraversal = elementTraversal.nextElementSibling;
     }
     element.parentNode.removeChild(element);
-  }
+  };
 
-  let testDOM = TaskController.createTask("Make Edit Button Work","make all of them work", "1-1-2025", "high");
+  const editTask = (event) => {
+    addTaskDialog.showModal();
+    document.querySelector('#task-dialog-title').textContent = 'Edit Task';
+    let element = event.target.parentNode;
+    console.log(element.value);
+    let task = TaskController.getTask(element.value);
+    document.querySelector('#title').value = task.title;
+    document.querySelector('#description').value = task.description;
+    document.querySelector('#dueDate').value = task.dueDate;
+    document.querySelector('#priority').value = task.priority;
+  };
+
+  let testDOM = TaskController.createTask(
+    'Make Edit Button Work',
+    'make all of them work',
+    '2025-01-01',
+    'high'
+  );
   createTaskDOM(testDOM);
 })();
-
