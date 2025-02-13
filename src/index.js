@@ -1,11 +1,12 @@
 import './index.css';
+import { parse,format } from "date-fns";
 
 const TaskController = (() => {
   class Task {
     constructor(title, description, dueDate, priority, isDone) {
       this.title = title;
       this.description = description;
-      this.dueDate = dueDate;
+      this.dueDate = formatDate(dueDate);
       this.priority = priority;
       this.id = undefined;
       this.isDone = isDone;
@@ -24,7 +25,7 @@ const TaskController = (() => {
   function updateTask(index, title, description, dueDate, priority, isDone) {
     tasks[index].title = title;
     tasks[index].description = description;
-    tasks[index].dueDate = dueDate;
+    tasks[index].dueDate = formatDate(dueDate);
     tasks[index].priority = priority;
     tasks[index].isDone = isDone;
   }
@@ -42,6 +43,11 @@ const TaskController = (() => {
 
   function setIsDone(index, isDone) {
     tasks[index].isDone = isDone;
+  }
+
+  function formatDate(date) {
+    const newDate = parse(date,'yyyy-MM-dd', new Date());
+    return format(newDate, 'MM-dd-yyyy');
   }
 
   return {
@@ -184,11 +190,13 @@ const DOMController = (() => {
     let description = document.querySelector('#description').value;
     let dueDate = document.querySelector('#dueDate').value;
     let priority = document.querySelector('#priority').value;
+
     const task = TaskController.createTask(
       title,
       description,
       dueDate,
-      priority
+      priority,
+      false
     );
 
     createTaskDOM(task);
