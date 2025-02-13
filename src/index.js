@@ -129,12 +129,27 @@ const DOMController = (() => {
     dom.className = 'expand';
   };
 
+  const showTaskDialogAdd = (event) => {
+    addTaskDialog.showModal();
+    let taskForm = document.querySelector('#add-task-form');
+    taskForm.replaceWith(addTaskForm.cloneNode(true));
+    taskForm = document.querySelector('#add-task-form');
+    taskForm.addEventListener('submit', addTask);
+    document.querySelector('#task-dialog-title').textContent = 'Add Task';
+    cancel = document.querySelector('#cancel');
+    cancel.addEventListener('click', (event) => {
+      event.preventDefault();
+      addTaskDialog.close();
+    });
+    let doneEditButton = document.querySelector('#submit');
+    doneEditButton.textContent = 'Done';
+  };
+
+
   const addTaskDialog = document.querySelector('#add-task-dialog');
 
   const addTaskButton = document.querySelector('.add-task-button');
-  addTaskButton.addEventListener('click', () => {
-    addTaskDialog.showModal();
-  });
+  addTaskButton.addEventListener('click', showTaskDialogAdd);
 
   const cancelButton = document.querySelector('#cancel');
   cancelButton.addEventListener('click', (event) => {
@@ -164,7 +179,7 @@ const DOMController = (() => {
   };
 
   const addTaskForm = document.querySelector('#add-task-form');
-  addTaskForm.addEventListener('submit', addTask);
+  addTaskForm.addEventListener('submit', showTaskDialogAdd);
 
   const deleteTask = (event) => {
     let element = event.target.parentNode;
@@ -214,7 +229,7 @@ const DOMController = (() => {
     console.log(TaskController.tasks);
     let taskContainer = document.querySelector('.task-container').firstChild;
     for (let i = 0; i < index; i++) {
-      taskContainer = element.nextElementSibling;
+      taskContainer = taskContainer.nextElementSibling;
     }
     let taskElement = taskContainer.firstChild;
     taskElement.textContent = title;
