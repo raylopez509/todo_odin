@@ -175,21 +175,59 @@ const DOMController = (() => {
 
   const editTask = (event) => {
     addTaskDialog.showModal();
+    let taskForm = document.querySelector('#add-task-form');
+    taskForm.replaceWith(addTaskForm.cloneNode(true));
+    taskForm = document.querySelector('#add-task-form');
+    taskForm.addEventListener('submit',(event) => editTaskSubmit(event, index))
     document.querySelector('#task-dialog-title').textContent = 'Edit Task';
     let element = event.target.parentNode;
+    let index = element.value;
     console.log(element.value);
     let task = TaskController.getTask(element.value);
     document.querySelector('#title').value = task.title;
     document.querySelector('#description').value = task.description;
     document.querySelector('#dueDate').value = task.dueDate;
     document.querySelector('#priority').value = task.priority;
+    cancelButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      addTaskDialog.close();
+    });
+    let doneEditButton = document.querySelector('#submit');
+    doneEditButton.textContent = "Done";
   };
 
-  let testDOM = TaskController.createTask(
-    'Make Edit Button Work',
-    'make all of them work',
-    '2025-01-01',
-    'high'
-  );
-  createTaskDOM(testDOM);
+  const editTaskSubmit = (event, index) => {
+    event.preventDefault();
+    let title = document.querySelector('#title').value;
+    let description = document.querySelector('#description').value;
+    let dueDate = document.querySelector('#dueDate').value;
+    let priority = document.querySelector('#priority').value;
+    
+    TaskController.updateTask(index, title, description, dueDate, priority);
+
+    let taskContainer = document.querySelector(".task-container").firstChild;
+    for(let i = 0; i < index; i++) {
+      taskContainer = element.nextElementSibling;
+    }
+    let taskElement = taskContainer.firstChild;
+    taskElement.textContent = title;
+    taskElement = taskElement.nextElementSibling;
+    taskElement.textContent = description;
+    taskElement = taskElement.nextElementSibling;
+    taskElement.textContent = dueDate;
+    taskElement = taskElement.nextElementSibling;
+    taskElement.textContent = priority;
+    document.querySelector('#title').value = '';
+    document.querySelector('#description').value = '';
+    document.querySelector('#dueDate').value = '';
+    addTaskDialog.close();
+  }
+
+  // let testDOM = TaskController.createTask(
+  //   'Make Edit Button Work',
+  //   'make all of them work',
+  //   '2025-01-01',
+  //   'high'
+  // );
+  // createTaskDOM(testDOM);
 })();
