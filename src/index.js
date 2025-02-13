@@ -182,7 +182,9 @@ const DOMController = (() => {
     let taskForm = document.querySelector('#add-task-form');
     taskForm.replaceWith(addTaskForm.cloneNode(true));
     taskForm = document.querySelector('#add-task-form');
-    taskForm.addEventListener('submit',(event) => editTaskSubmit(event, index))
+    taskForm.addEventListener('submit', (event) =>
+      editTaskSubmit(event, index)
+    );
     document.querySelector('#task-dialog-title').textContent = 'Edit Task';
     let element = event.target.parentNode;
     let index = element.value;
@@ -197,7 +199,7 @@ const DOMController = (() => {
       addTaskDialog.close();
     });
     let doneEditButton = document.querySelector('#submit');
-    doneEditButton.textContent = "Done";
+    doneEditButton.textContent = 'Done';
   };
 
   const editTaskSubmit = (event, index) => {
@@ -206,12 +208,12 @@ const DOMController = (() => {
     let description = document.querySelector('#description').value;
     let dueDate = document.querySelector('#dueDate').value;
     let priority = document.querySelector('#priority').value;
-    
+
     TaskController.updateTask(index, title, description, dueDate, priority);
 
     console.log(TaskController.tasks);
-    let taskContainer = document.querySelector(".task-container").firstChild;
-    for(let i = 0; i < index; i++) {
+    let taskContainer = document.querySelector('.task-container').firstChild;
+    for (let i = 0; i < index; i++) {
       taskContainer = element.nextElementSibling;
     }
     let taskElement = taskContainer.firstChild;
@@ -226,13 +228,13 @@ const DOMController = (() => {
     document.querySelector('#description').value = '';
     document.querySelector('#dueDate').value = '';
     addTaskDialog.close();
-  }
+  };
 
-  // let testDOM = TaskController.createTask(
-  //   'Make Edit Button Work',
-  //   'make all of them work',
-  //   '2025-01-01',
-  //   'high'
-  // );
-  // createTaskDOM(testDOM);
+  let testDOM = TaskController.createTask(
+    'Make Edit Button Work',
+    'make all of them work',
+    '2025-01-01',
+    'high'
+  );
+  createTaskDOM(testDOM);
 })();
