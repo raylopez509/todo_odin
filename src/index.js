@@ -20,8 +20,11 @@ const TaskController = (() => {
     }
   }
 
-  function updateTask(task, index) {
-    tasks[index] = task;
+  function updateTask(index, title, description, dueDate, priority) {
+    tasks[index].title = title;
+    tasks[index].description = description;
+    tasks[index].dueDate = dueDate;
+    tasks[index].priority = priority;
   }
 
   function getTask(index) {
@@ -40,6 +43,7 @@ const TaskController = (() => {
     updateTask,
     getTask,
     createTask,
+    tasks,
   };
 })();
 
@@ -205,6 +209,7 @@ const DOMController = (() => {
     
     TaskController.updateTask(index, title, description, dueDate, priority);
 
+    console.log(TaskController.tasks);
     let taskContainer = document.querySelector(".task-container").firstChild;
     for(let i = 0; i < index; i++) {
       taskContainer = element.nextElementSibling;
