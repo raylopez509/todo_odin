@@ -2,12 +2,13 @@ import './index.css';
 
 const TaskController = (() => {
   class Task {
-    constructor(title, description, dueDate, priority) {
+    constructor(title, description, dueDate, priority, isDone) {
       this.title = title;
       this.description = description;
       this.dueDate = dueDate;
       this.priority = priority;
       this.id = undefined;
+      this.isDone = isDone;
     }
   }
 
@@ -20,22 +21,27 @@ const TaskController = (() => {
     }
   }
 
-  function updateTask(index, title, description, dueDate, priority) {
+  function updateTask(index, title, description, dueDate, priority, isDone) {
     tasks[index].title = title;
     tasks[index].description = description;
     tasks[index].dueDate = dueDate;
     tasks[index].priority = priority;
+    tasks[index].isDone = isDone;
   }
 
   function getTask(index) {
     return tasks[index];
   }
 
-  function createTask(title, description, dueDate, priority) {
-    const task = new Task(title, description, dueDate, priority);
+  function createTask(title, description, dueDate, priority, isDone) {
+    const task = new Task(title, description, dueDate, priority, isDone);
     task.id = tasks.length;
     tasks.push(task);
     return task;
+  }
+
+  function setIsDone(index, isDone) {
+    tasks[index].isDone = isDone;
   }
 
   return {
@@ -43,6 +49,7 @@ const TaskController = (() => {
     updateTask,
     getTask,
     createTask,
+    setIsDone,
     tasks,
   };
 })();
@@ -66,17 +73,31 @@ const DOMController = (() => {
 
   function createTaskSection(value) {
     const taskSection = document.createElement('section');
-    taskSection.className = 'expand';
+    taskSection.classList.add('expand');
     taskSection.value = value;
     taskSection.addEventListener('click', expandSection);
     return taskSection;
   }
+
+  const flipIsDone = (event) => {
+    let taskSection = event.target.parentNode;
+    let index = taskSection.value;
+    let isDone = TaskController.getTask(index).isDone;
+    TaskController.setIsDone(index, !isDone);
+    if(TaskController.getTask(index).isDone) {
+      taskSection.classList.add('done');
+    }
+    else {
+      taskSection.classList.remove('done');
+    }
+  };
 
   function createChildrenDOMsShrink(element, task) {
     element.appendChild(createDOMElement('p', task.title, task.id));
     element.appendChild(createDOMElement('p', task.dueDate, task.id));
     const doneButton = document.createElement('button');
     doneButton.textContent = 'Done';
+    doneButton.addEventListener('click',flipIsDone);
     element.appendChild(doneButton);
   }
 
@@ -109,7 +130,7 @@ const DOMController = (() => {
     dom.addEventListener('click', shrinkSection);
     dom.removeEventListener('click', expandSection);
     createChildrenDOMsExpand(dom, task);
-    dom.className = '';
+    dom.classList.remove('expand');
   };
 
   const shrinkSection = (event) => {
@@ -126,7 +147,7 @@ const DOMController = (() => {
     dom.addEventListener('click', expandSection);
     dom.removeEventListener('click', shrinkSection);
     createChildrenDOMsShrink(dom, task);
-    dom.className = 'expand';
+    dom.classList.add('expand');
   };
 
   const showTaskDialogAdd = (event) => {
@@ -249,7 +270,8 @@ const DOMController = (() => {
     'Make Edit Button Work',
     'make all of them work',
     '2025-01-01',
-    'high'
+    'high',
+    false
   );
   createTaskDOM(testDOM);
 })();
