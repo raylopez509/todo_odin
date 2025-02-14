@@ -1,5 +1,5 @@
 import './index.css';
-import { parse,format } from "date-fns";
+import { parse, format } from 'date-fns';
 
 const TaskController = (() => {
   class Task {
@@ -46,7 +46,7 @@ const TaskController = (() => {
   }
 
   function formatDate(date) {
-    const newDate = parse(date,'yyyy-MM-dd', new Date());
+    const newDate = parse(date, 'yyyy-MM-dd', new Date());
     return format(newDate, 'MM-dd-yyyy');
   }
 
@@ -90,10 +90,9 @@ const DOMController = (() => {
     let index = taskSection.value;
     let isDone = TaskController.getTask(index).isDone;
     TaskController.setIsDone(index, !isDone);
-    if(TaskController.getTask(index).isDone) {
+    if (TaskController.getTask(index).isDone) {
       taskSection.classList.add('done');
-    }
-    else {
+    } else {
       taskSection.classList.remove('done');
     }
   };
@@ -103,7 +102,7 @@ const DOMController = (() => {
     element.appendChild(createDOMElement('p', task.dueDate, task.id));
     const doneButton = document.createElement('button');
     doneButton.textContent = 'Done';
-    doneButton.addEventListener('click',flipIsDone);
+    doneButton.addEventListener('click', flipIsDone);
     element.appendChild(doneButton);
   }
 
@@ -172,7 +171,6 @@ const DOMController = (() => {
     doneEditButton.textContent = 'Done';
   };
 
-
   const addTaskDialog = document.querySelector('#add-task-dialog');
 
   const addTaskButton = document.querySelector('.add-task-button');
@@ -238,7 +236,8 @@ const DOMController = (() => {
     document.querySelector('#description').value = task.description;
     document.querySelector('#dueDate').value = task.dueDate;
     document.querySelector('#priority').value = task.priority;
-    cancelButton.addEventListener('click', (event) => {
+    cancel = document.querySelector('#cancel');
+    cancel.addEventListener('click', (event) => {
       event.preventDefault();
       addTaskDialog.close();
     });
