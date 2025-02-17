@@ -13,13 +13,18 @@ const TaskController = (() => {
     }
   }
 
-  const tasks = [];
+  let tasks = [];
+  if (localStorage.getItem("tasks")) {
+    tasks = JSON.parse(localStorage.getItem("tasks"));
+    console.log(tasks);
+  }
 
   function deleteTask(taskId) {
     tasks.splice(taskId, 1);
     for (let i = taskId; i < tasks.length; i++) {
       tasks[i].id = tasks[i].id - 1;
     }
+    localStorage.setItem("tasks", JSON.stringify(tasks));
   }
 
   function updateTask(index, title, description, dueDate, priority, isDone) {
@@ -28,6 +33,7 @@ const TaskController = (() => {
     tasks[index].dueDate = formatDate(dueDate);
     tasks[index].priority = priority;
     tasks[index].isDone = isDone;
+    localStorage.setItem("tasks", JSON.stringify(tasks));
   }
 
   function getTask(index) {
@@ -38,16 +44,22 @@ const TaskController = (() => {
     const task = new Task(title, description, dueDate, priority, isDone);
     task.id = tasks.length;
     tasks.push(task);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
     return task;
   }
 
   function setIsDone(index, isDone) {
     tasks[index].isDone = isDone;
+    localStorage.setItem("tasks", JSON.stringify(tasks));
   }
 
   function formatDate(date) {
     const newDate = parse(date, 'yyyy-MM-dd', new Date());
     return format(newDate, 'MM-dd-yyyy');
+  }
+
+  function getTaskQuantity() {
+    return tasks.length;
   }
 
   return {
@@ -56,11 +68,20 @@ const TaskController = (() => {
     getTask,
     createTask,
     setIsDone,
-    tasks,
+    getTaskQuantity,
+    tasks
   };
 })();
 
 const DOMController = (() => {
+
+  function initialSetup() {
+    const taskQuantity = TaskController.getTaskQuantity();
+    for(let i = 0; i < taskQuantity; i++) {
+      createTaskDOM(TaskController.getTask(i)); 
+    }
+  }
+
   function createDOMElement(tag, text, id) {
     const element = document.createElement(tag);
     element.textContent = text;
@@ -273,12 +294,8 @@ const DOMController = (() => {
     addTaskDialog.close();
   };
 
-  let testDOM = TaskController.createTask(
-    'Make Edit Button Work',
-    'make all of them work',
-    '2025-01-01',
-    'high',
-    false
-  );
-  createTaskDOM(testDOM);
+  if (localStorage.getItem("tasks")) {
+    initialSetup();
+  }
 })();
+
